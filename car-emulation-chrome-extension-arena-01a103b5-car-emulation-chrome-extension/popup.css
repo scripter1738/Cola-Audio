@@ -142,17 +142,27 @@ h2 {
 }
 
 /* Category Filter Pills */
+/* Scrolling chip rows instead of a grid: the filter list keeps growing, and a
+   grid would reflow every pill whenever one is added. */
 .category-tabs {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: nowrap;
   gap: 4px;
   background: var(--panel-2);
   padding: 3px;
   border-radius: 8px;
   border: 1px solid var(--line);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+
+.category-tabs::-webkit-scrollbar {
+  display: none;
 }
 
 .tab-pill {
+  flex: 0 0 auto;
   min-width: 0;
   background: transparent;
   border: none;
@@ -168,11 +178,6 @@ h2 {
   text-overflow: ellipsis;
 }
 
-
-/* Keep the final Earbuds filter centred when all ten target groups are present. */
-.tab-pill:last-child:nth-child(10) {
-  grid-column: 2;
-}
 
 .tab-pill:hover {
   color: var(--text);

@@ -487,6 +487,7 @@ export const PRESETS = {
   boots_shop: {
     name: "Boots shop (in-store music)",
     category: "space",
+    segment: "public",
     desc: "Music heard from distributed ceiling speakers in a Boots-style pharmacy: bass-limited, mostly mono, gently compressed, and washed into a reflective retail floor.",
     hp: 118, lp: 9800, sub: -2.0, subF: 150, subQ: 0.9,
     door: { f: 190, g: 1.8, q: 1.25 }, // ceiling-speaker / plenum resonance
@@ -503,6 +504,7 @@ export const PRESETS = {
     noEngine: true,
     seat: "center",
     ambienceProfile: "retail",
+    ambienceTitle: "Shop Ambience",
     ambienceLabel: "Store ambience",
     badge: {
       title: "🛍️ Boots shop in-store music:",
@@ -516,6 +518,7 @@ export const PRESETS = {
   nightclub: {
     name: "Nightclub dancefloor",
     category: "space",
+    segment: "venue",
     desc: "Front-of-dancefloor club system: deep sub pressure, firm limiting, dense room wash, and an optional low crowd / venue bed beneath the selected music.",
     hp: 28, lp: 15200, sub: 8.2, subF: 48, subQ: 1.05,
     door: { f: 74, g: 5.6, q: 1.3 }, // horn / enclosure punch
@@ -532,6 +535,7 @@ export const PRESETS = {
     noEngine: true,
     seat: "center",
     ambienceProfile: "club",
+    ambienceTitle: "Club Ambience",
     ambienceLabel: "Crowd / room bed",
     badge: {
       title: "🪩 Nightclub dancefloor emulation:",
@@ -539,6 +543,339 @@ export const PRESETS = {
     },
     seatNotice: "ℹ️ Dancefloor position: centred in front of the system rather than a car-seat perspective.",
     environmentNotice: "ℹ️ Vehicle noise is disabled. Use Crowd / room bed to add subtle club-space texture below the music.",
+  },
+
+  // --- CONCERT VENUES ---
+  inside_concert: {
+    name: "Inside the concert",
+    category: "space",
+    segment: "venue",
+    desc: "Front-of-stage arena PA: horn-loaded tops, deep sub pressure from the stacks, firm system limiting, and a huge crowd-and-hall tail around the music.",
+    hp: 32, lp: 13500, sub: 7.8, subF: 45, subQ: 1.05,
+    door: { f: 64, g: 5.2, q: 1.15 }, // line-array / horn punch
+    mid: { f: 420, g: -2.4, q: 0.9 },
+    pres: { f: 3150, g: 3.2, q: 1.35 }, // PA horn presence
+    pres2: { f: 8200, g: -1.2, q: 1.7 },
+    bassTilt: 4.6, trebleTilt: -1.2,
+    sat: 0.32, asym: 0.03,
+    comp: { thr: -18, ratio: 5.2, attack: 0.006, release: 0.17 },
+    ir: { type: "arena", size: 2.6, rt60: 0.7, damp: 2500, er: 0.5, tail: 0.36 },
+    irMix: 1.25, rattle: 0.35, out: 0.9, isolation: 0, balance: 1,
+    mono: false,
+    crossfeed: false,
+    noEngine: true,
+    seat: "center",
+    ambienceProfile: "arena",
+    ambienceTitle: "Crowd & Hall Ambience",
+    ambienceLabel: "Crowd roar & hall tail",
+    badge: {
+      title: "🎤 Inside the concert emulation:",
+      text: "Models a big-room PA at the barrier: sub-heavy horn tops, aggressive venue limiting and a long crowd-and-hall tail. Pad-level approximation, not a measured venue profile.",
+    },
+    seatNotice: "ℹ️ Front-of-stage position: centred in the stack field, not a seat in a car.",
+    environmentNotice: "ℹ️ Vehicle noise is disabled. Use the crowd / hall bed to add room roar under the music.",
+  },
+
+  outside_concert: {
+    name: "Outside the concert",
+    category: "space",
+    segment: "venue",
+    desc: "On the pavement outside a sold-out gig: kick and bass leaking through the building, muffled PA top end, plus street traffic and crowd spill.",
+    hp: 30, lp: 3000, sub: 5.0, subF: 42, subQ: 0.9,
+    door: { f: 62, g: 4.4, q: 1.0 }, // structure-borne thump
+    mid: { f: 500, g: -3.0, q: 0.9 },
+    pres: { f: 1300, g: -3.0, q: 1.1 }, // everything above is wall
+    pres2: { f: 3400, g: -3.0, q: 1.4 },
+    bassTilt: 4.0, trebleTilt: -9.0,
+    sat: 0.3, asym: 0.04,
+    comp: { thr: -22, ratio: 3.5 },
+    ir: { type: "outdoor", size: 1.8, rt60: 0.35, damp: 1500, er: 0.42, tail: 0.24 },
+    irMix: 1.2, rattle: 0, out: 0.86, isolation: 0, balance: 1,
+    mono: false,
+    crossfeed: false,
+    noEngine: true,
+    seat: "center",
+    ambienceProfile: "outdoor_venue",
+    ambienceTitle: "Street & Crowd Ambience",
+    ambienceLabel: "Street spill & traffic",
+    badge: {
+      title: "🚧 Outside the concert emulation:",
+      text: "Treats the input as a gig heard from the street: only the low thump survives the walls, the top end is gone, and the street bed supplies traffic and crowd spill.",
+    },
+    seatNotice: "ℹ️ Pavement position: the venue wall is between you and the PA.",
+    environmentNotice: "ℹ️ Vehicle noise is disabled. Use the street bed to blend crowd spill and traffic under the thump.",
+  },
+
+  karaoke_box: {
+    name: "Karaoke box",
+    category: "space",
+    segment: "venue",
+    desc: "Bonus space: a small private karaoke room — cheap handheld mic channel, hard compressed little PA, boxy reflections and next door singing through the wall.",
+    hp: 105, lp: 10200, sub: -0.6, subF: 120, subQ: 1.0,
+    door: { f: 245, g: 2.6, q: 1.6 }, // small plastic PA cabinet
+    mid: { f: 760, g: -2.6, q: 0.95 },
+    pres: { f: 2950, g: 3.2, q: 1.5 }, // mic / feedback region
+    pres2: { f: 6900, g: 0.9, q: 1.8 },
+    bassTilt: -1.4, trebleTilt: -1.2,
+    sat: 0.3, asym: 0.02,
+    comp: { thr: -19, ratio: 6.5, attack: 0.006, release: 0.16 },
+    ir: { type: "karaoke", size: 1.15, rt60: 0.3, damp: 3100, er: 0.6, tail: 0.24 },
+    irMix: 1.0, rattle: 0, out: 0.9, isolation: 0, balance: 1,
+    mono: false,
+    crossfeed: false,
+    noEngine: true,
+    seat: "center",
+    ambienceProfile: "karaoke_room",
+    ambienceTitle: "Room Ambience",
+    ambienceLabel: "Next-door singalong",
+    badge: {
+      title: "🎤 Karaoke box (bonus space):",
+      text: "A tiny private room PA: hard limiting, boxy low-mid build-up and a muffled neighbouring-room bleed underneath. Built as a fun translation check.",
+    },
+    seatNotice: "ℹ️ Sofa position: close to a small PA at the front of a narrow room.",
+    environmentNotice: "ℹ️ Vehicle noise is disabled. Use room ambience to blend the next-door singalong into the bed.",
+  },
+
+  dance_studio: {
+    name: "Dance studio",
+    category: "space",
+    segment: "room",
+    desc: "Mirrored sprung-floor studio: floor monitors in a big empty hall, wooden floor resonance, glassy slap and a long bright tail off the mirrors.",
+    hp: 44, lp: 14200, sub: 3.4, subF: 58, subQ: 1.0,
+    door: { f: 92, g: 4.2, q: 1.15 }, // sprung wooden floor
+    mid: { f: 420, g: -2.2, q: 0.9 },
+    pres: { f: 2700, g: 2.2, q: 1.3 },
+    pres2: { f: 6800, g: -0.8, q: 1.6 },
+    bassTilt: 1.8, trebleTilt: 1.2,
+    sat: 0.16, asym: 0.01,
+    comp: { thr: -22, ratio: 3.0 },
+    ir: { type: "hall", size: 1.8, rt60: 0.58, damp: 5200, er: 0.72, tail: 0.28 },
+    irMix: 1.1, rattle: 0, out: 0.92, isolation: 0, balance: 1,
+    mono: false,
+    crossfeed: false,
+    noEngine: true,
+    seat: "center",
+    ambienceProfile: "studio_hall",
+    ambienceTitle: "Hall Ambience",
+    ambienceLabel: "Empty hall air",
+    badge: {
+      title: "🩰 Dance studio emulation:",
+      text: "Floor monitors in a large mirrored hall: wooden floor resonance, short glassy slaps and a wide reverberant tail. Useful for checking how a mix survives a big bare room.",
+    },
+    seatNotice: "ℹ️ Centre-floor position: monitors facing you from the mirror wall.",
+    environmentNotice: "ℹ️ Vehicle noise is disabled. Use room ambience to add the empty-hall bed under the music.",
+  },
+
+  // --- PUBLIC / STREET SPACES ---
+  mall: {
+    name: "Shopping centre (mall)",
+    category: "space",
+    segment: "public",
+    desc: "Mall concourse: distributed ceiling speakers across a long glassy atrium, mono programme, compressed in-store music and distant shopper chatter.",
+    hp: 110, lp: 8800, sub: -2.6, subF: 150, subQ: 0.9,
+    door: { f: 175, g: 2.0, q: 1.3 }, // ceiling-speaker / plenum resonance
+    mid: { f: 640, g: -1.9, q: 0.9 },
+    pres: { f: 2600, g: 2.4, q: 1.35 },
+    pres2: { f: 6400, g: -2.4, q: 1.7 },
+    bassTilt: -2.6, trebleTilt: -1.4,
+    sat: 0.14, asym: 0.01,
+    comp: { thr: -24, ratio: 4.4, attack: 0.018, release: 0.26 },
+    ir: { type: "mall", size: 2.6, rt60: 0.5, damp: 3200, er: 0.7, tail: 0.28 },
+    irMix: 1.2, rattle: 0, out: 0.88, isolation: 0, balance: 1,
+    mono: true,
+    crossfeed: false,
+    noEngine: true,
+    seat: "center",
+    ambienceProfile: "mall",
+    ambienceTitle: "Mall Ambience",
+    ambienceLabel: "Shopper chatter & air handling",
+    badge: {
+      title: "🏬 Mall concourse emulation:",
+      text: "Models a shopping-centre PA in a long reflective atrium: mono ceiling-speaker voicing, gentle programme limiting and a shopping bed of chatter and air handling.",
+    },
+    seatNotice: "ℹ️ Concourse position: programme arrives from many ceiling speakers, so the image is wide but effectively mono.",
+    environmentNotice: "ℹ️ Vehicle noise is disabled. Use shopper ambience to add chatter and air handling under the music.",
+  },
+
+  clothing_shop: {
+    name: "Clothing shop (mall)",
+    category: "space",
+    segment: "public",
+    desc: "Fashion store in a mall: rails of clothes soak up the top end, so the ceiling system sounds soft and mid-forward with a clipped, bass-shy little PA.",
+    hp: 132, lp: 7200, sub: -3.4, subF: 165, subQ: 0.95,
+    door: { f: 215, g: 1.6, q: 1.4 }, // small ceiling can / shelf cavity
+    mid: { f: 700, g: -2.2, q: 0.9 },
+    pres: { f: 2850, g: 2.0, q: 1.4 },
+    pres2: { f: 7000, g: -3.6, q: 1.9 }, // fabric absorption up top
+    bassTilt: -3.2, trebleTilt: -2.8,
+    sat: 0.12, asym: 0.01,
+    comp: { thr: -25, ratio: 4.2, attack: 0.02, release: 0.27 },
+    ir: { type: "clothing", size: 1.9, rt60: 0.26, damp: 2400, er: 0.52, tail: 0.22 },
+    irMix: 1.05, rattle: 0, out: 0.87, isolation: 0, balance: 1,
+    mono: true,
+    crossfeed: false,
+    noEngine: true,
+    seat: "center",
+    ambienceProfile: "clothing_shop",
+    ambienceTitle: "Shop Ambience",
+    ambienceLabel: "Quiet shop murmur",
+    badge: {
+      title: "👕 Clothing shop emulation:",
+      text: "A fashion-store ceiling system in a fabric-heavy room: soft damped tail, no real sub, and a mid-forward in-store voicing. Great for checking whether a hook still reads at low level.",
+    },
+    seatNotice: "ℹ️ Shop-floor position: close-ish ceiling cans above, rails of clothes on both sides.",
+    environmentNotice: "ℹ️ Vehicle noise is disabled. Use shop ambience to blend a quiet murmur beneath the music.",
+  },
+
+  tube_platform: {
+    name: "Underground platform",
+    category: "space",
+    segment: "public",
+    desc: "Bonus space: a London Underground platform — a busker's little amp fighting tunnel rumble, tiled slap-back reflections, announcements and hiss.",
+    hp: 92, lp: 8200, sub: -1.2, subF: 130, subQ: 1.0,
+    door: { f: 205, g: 2.2, q: 1.3 }, // small combo amp on tiles
+    mid: { f: 620, g: -2.0, q: 0.9 },
+    pres: { f: 2750, g: 2.8, q: 1.4 },
+    pres2: { f: 6400, g: -1.8, q: 1.7 },
+    bassTilt: -1.8, trebleTilt: -2.2,
+    sat: 0.3, asym: 0.02,
+    comp: { thr: -21, ratio: 5.0, attack: 0.008, release: 0.18 },
+    ir: { type: "tunnel", size: 1.7, rt60: 0.55, damp: 2600, er: 0.8, tail: 0.3 },
+    irMix: 1.3, rattle: 0, out: 0.88, isolation: 0, balance: 1,
+    mono: true,
+    crossfeed: false,
+    noEngine: true,
+    seat: "center",
+    ambienceProfile: "tube",
+    ambienceTitle: "Platform Ambience",
+    ambienceLabel: "Rumble, hiss & trains",
+    badge: {
+      title: "🚇 Underground platform (bonus space):",
+      text: "A tiled underground platform: slappy tunnel reflections, a small mono busking amp and a bed of rumble, hiss and passing trains. Built as a fun translation check.",
+    },
+    seatNotice: "ℹ️ Platform position: a few metres from the busker, tunnel behind them.",
+    environmentNotice: "ℹ️ Vehicle noise is disabled. Use platform ambience to add rumble, hiss and train surges under the music.",
+  },
+
+  speaker_bike: {
+    name: "Speaker on a bike",
+    category: "space",
+    segment: "public",
+    desc: "A little Bluetooth speaker strapped to a bike: mono, no bass, plastic-enclosure honk, wind blast and traffic sliding past.",
+    hp: 205, lp: 9200, sub: -6.0, subF: 230, subQ: 1.1,
+    door: { f: 330, g: 3.4, q: 2.4 }, // plastic enclosure honk
+    mid: { f: 950, g: -2.2, q: 1.0 },
+    pres: { f: 3050, g: 3.6, q: 1.6 },
+    pres2: { f: 6900, g: 1.2, q: 1.9 },
+    bassTilt: -4.2, trebleTilt: -1.2,
+    sat: 0.52, asym: 0.06,
+    comp: { thr: -22, ratio: 5.0, attack: 0.005, release: 0.12 },
+    ir: { type: "outdoor", size: 0.55, rt60: 0.14, damp: 5200, er: 0.3, tail: 0.1 },
+    irMix: 0.4, rattle: 0.25, out: 0.86, isolation: 0, balance: 1,
+    mono: true,
+    crossfeed: false,
+    noEngine: true,
+    seat: "center",
+    ambienceProfile: "bike",
+    ambienceTitle: "Street Ambience",
+    ambienceLabel: "Wind & passing traffic",
+    badge: {
+      title: "🚲 Speaker on a bike emulation:",
+      text: "A pocket Bluetooth speaker in open air: everything below ~200Hz is gone, the plastic cabinet honks, and the wind / traffic bed runs under the music.",
+    },
+    seatNotice: "ℹ️ Rider position: the speaker is behind you on the frame, so the top end is directional and mono.",
+    environmentNotice: "ℹ️ Vehicle noise is disabled. Use street ambience for wind, tyre noise and passing traffic.",
+  },
+
+  phone_outside: {
+    name: "Phone outside (street)",
+    category: "space",
+    segment: "public",
+    desc: "A phone speaker out on the street or in the park: near-mono, bass-shy, midrange-forward, with traffic and gusts around it and almost no room reverb.",
+    hp: 198, lp: 11800, sub: -4.7, subF: 205, subQ: 1.0,
+    door: { f: 745, g: 2.5, q: 1.5 }, // phone body resonance
+    mid: { f: 1420, g: -1.2, q: 1.0 },
+    pres: { f: 3330, g: 4.0, q: 1.75 },
+    pres2: { f: 7500, g: 2.0, q: 2.0 },
+    bassTilt: -5.2, trebleTilt: -1.4,
+    sat: 0.42, asym: 0.03,
+    comp: { thr: -25, ratio: 7.4, attack: 0.004, release: 0.11 },
+    ir: { type: "outdoor", size: 0.8, rt60: 0.2, damp: 4700, er: 0.35, tail: 0.12 },
+    irMix: 0.45, rattle: 0.05, out: 0.84, isolation: 0, balance: 1,
+    mono: true,
+    crossfeed: false,
+    noEngine: true,
+    seat: "center",
+    ambienceProfile: "street_phone",
+    ambienceTitle: "Street Ambience",
+    ambienceLabel: "Traffic & gusts",
+    badge: {
+      title: "📱 Phone outside emulation:",
+      text: "A handheld phone speaker in open air: near-mono, no real low end, protective limiting, and a street bed of traffic and wind instead of room reflections.",
+    },
+    seatNotice: "ℹ️ Arm's-length position: hand-held phone, centred and near-mono.",
+    environmentNotice: "ℹ️ Vehicle noise is disabled. Use street ambience for traffic rumble and gusts.",
+  },
+
+  // --- DOMESTIC ROOMS ---
+  living_room: {
+    name: "Living room studio",
+    category: "space",
+    segment: "room",
+    desc: "A domestic living room treated like a small studio: nearfields on stands, sofa and rug absorbing, a little table resonance and a short soft tail.",
+    hp: 52, lp: 16800, sub: 1.4, subF: 52, subQ: 0.9,
+    door: { f: 108, g: 1.4, q: 1.0 }, // shelf / sideboard resonance
+    mid: { f: 380, g: -1.2, q: 0.9 },
+    pres: { f: 3000, g: 0.8, q: 1.25 },
+    pres2: { f: 8200, g: 0.6, q: 1.7 },
+    bassTilt: 0.6, trebleTilt: 0.2,
+    sat: 0.07, asym: 0,
+    comp: { thr: -22, ratio: 1.8 },
+    ir: { type: "living", size: 1.35, rt60: 0.24, damp: 4300, er: 0.5, tail: 0.22 },
+    irMix: 0.6, rattle: 0, out: 0.96, isolation: 0, balance: 1,
+    mono: false,
+    crossfeed: false,
+    noEngine: true,
+    seat: "center",
+    ambienceProfile: "living_room",
+    ambienceTitle: "Room Ambience",
+    ambienceLabel: "Domestic room tone",
+    badge: {
+      title: "🛋️ Living room studio emulation:",
+      text: "Mid-size domestic room with nearfield monitors: a touch of bass support from the corner, soft absorption from soft furnishings and a short, gentle tail.",
+    },
+    seatNotice: "ℹ️ Mixing position: equilateral triangle with the monitors, one metre back.",
+    environmentNotice: "ℹ️ Vehicle noise is disabled. Use room ambience to add quiet domestic room tone.",
+  },
+
+  sister_tiktok: {
+    name: "Sister's TikTok (living room)",
+    category: "space",
+    segment: "room",
+    desc: "Your sister watching TikTok on her phone in the living room: a tiny mono speaker, heavy bass cut and limiter, heard from across a soft-furnished room with TV murmur.",
+    hp: 190, lp: 10500, sub: -5.0, subF: 210, subQ: 1.0,
+    door: { f: 760, g: 2.6, q: 1.5 }, // phone body resonance
+    mid: { f: 1400, g: -1.4, q: 1.0 },
+    pres: { f: 3400, g: 4.4, q: 1.75 }, // speech-forward phone voicing
+    pres2: { f: 7300, g: 1.6, q: 2.0 },
+    bassTilt: -5.0, trebleTilt: -2.6,
+    sat: 0.44, asym: 0.03,
+    comp: { thr: -26, ratio: 8.0, attack: 0.004, release: 0.1 },
+    ir: { type: "living", size: 1.5, rt60: 0.3, damp: 3000, er: 0.55, tail: 0.24 },
+    irMix: 0.95, rattle: 0, out: 0.84, isolation: 0, balance: 1,
+    mono: true,
+    crossfeed: false,
+    noEngine: true,
+    seat: "center",
+    ambienceProfile: "living_phone",
+    ambienceTitle: "Room Ambience",
+    ambienceLabel: "TV murmur & room tone",
+    badge: {
+      title: "📱 Sister's TikTok emulation:",
+      text: "A phone playing short-form video across a living room: mono, bass-less, compressed to hell, with the sofa-and-carpet tail and a little TV murmur underneath.",
+    },
+    seatNotice: "ℹ️ Across the room: roughly three metres from the phone, so the room tail is clearly audible.",
+    environmentNotice: "ℹ️ Vehicle noise is disabled. Use room ambience to blend TV murmur and room tone under the video.",
   },
 
   // --- AMAZON ALEXA SMART SPEAKER ---
@@ -625,6 +962,37 @@ export const PRESETS = {
 
 export const PRESET_IDS = Object.keys(PRESETS);
 
+/*
+ * Space ambience beds
+ * -------------------
+ * One band-limited noise bed is shared by every space preset; the profile
+ * decides where it sits in the spectrum, how loud it lands, and whether it
+ * slowly moves (crowd swell, passing trains, wind gusts).
+ *
+ *   hp / lp   band edges of the bed (Hz)
+ *   gain      bed level at full ambience
+ *   level     default ambience dial position for this space
+ *   sweep     slow movement of the band edge (Hz depth / Hz rate)
+ *   trem      slow level movement (0-0.6 depth / Hz rate)
+ */
+export const SPACE_BEDS = {
+  retail: { hp: 170, lp: 3000, gain: 0.035, level: 0.35 },
+  club: { hp: 78, lp: 1850, gain: 0.052, level: 0.35, sweep: { depth: 240, rate: 0.075 } },
+  arena: { hp: 70, lp: 2100, gain: 0.062, level: 0.5, sweep: { depth: 320, rate: 0.07 }, trem: { depth: 0.14, rate: 0.23 } },
+  outdoor_venue: { hp: 360, lp: 2500, gain: 0.05, level: 0.45, sweep: { depth: 280, rate: 0.06 } },
+  karaoke_room: { hp: 300, lp: 2400, gain: 0.04, level: 0.32, trem: { depth: 0.22, rate: 0.31 } },
+  studio_hall: { hp: 260, lp: 3600, gain: 0.034, level: 0.3, sweep: { depth: 200, rate: 0.05 } },
+  mall: { hp: 280, lp: 3200, gain: 0.045, level: 0.36, sweep: { depth: 220, rate: 0.04 }, trem: { depth: 0.1, rate: 0.17 } },
+  clothing_shop: { hp: 240, lp: 2800, gain: 0.028, level: 0.28, trem: { depth: 0.12, rate: 0.21 } },
+  tube: { hp: 55, lp: 2200, gain: 0.062, level: 0.46, sweep: { depth: 420, rate: 0.05 }, trem: { depth: 0.34, rate: 0.043 } },
+  bike: { hp: 480, lp: 4200, gain: 0.055, level: 0.42, sweep: { depth: 380, rate: 0.11 }, trem: { depth: 0.25, rate: 0.19 } },
+  street_phone: { hp: 420, lp: 3400, gain: 0.045, level: 0.38, sweep: { depth: 300, rate: 0.09 } },
+  living_room: { hp: 210, lp: 2600, gain: 0.026, level: 0.28, trem: { depth: 0.09, rate: 0.12 } },
+  living_phone: { hp: 240, lp: 2900, gain: 0.032, level: 0.32, sweep: { depth: 180, rate: 0.045 }, trem: { depth: 0.11, rate: 0.14 } },
+};
+
+export const DEFAULT_SPACE_BED = { hp: 220, lp: 2800, gain: 0.03, level: 0.3 };
+
 export const DEFAULT_SETTINGS = {
   enabled: true,
   preset: "sedan",
@@ -636,6 +1004,8 @@ export const DEFAULT_SETTINGS = {
   windows: false,
   speed: 60,
   ambience: 0.35,
+  ambiencePreset: "",
+  ambienceLevels: {},
   rattle: true,
   engine: true,
   mono: false,
@@ -728,6 +1098,56 @@ export function makeCabinIR(ctx, opts = {}) {
       [69.0, -0.12],
       [94.0, 0.08],
       [127.0, -0.05],
+    ];
+  } else if (type === "arena") {
+    // Wide, dense reflections off a big arena bowl, plus crowd-body diffusion.
+    EARLY = [
+      [7.2, 0.3], [15.5, -0.27], [26.0, 0.24], [40.0, -0.2], [58.0, 0.16],
+      [82.0, -0.13], [112.0, 0.1], [148.0, -0.07], [190.0, 0.05],
+    ];
+  } else if (type === "outdoor") {
+    // Open-air gig: almost no boundaries, so only distance / air and a few
+    // distant building faces come back.
+    EARLY = [
+      [3.4, 0.12], [9.8, -0.08], [21.0, 0.06], [38.0, -0.04], [62.0, 0.03],
+    ];
+  } else if (type === "karaoke") {
+    // Small private karaoke room: tight slap from four close hard surfaces.
+    EARLY = [
+      [2.4, 0.5], [4.9, -0.42], [8.1, 0.34], [12.4, -0.27], [18.0, 0.21],
+      [25.0, -0.15], [34.0, 0.1],
+    ];
+  } else if (type === "hall") {
+    // Mirrored dance studio: strong early slap plus a wide, bright tail.
+    EARLY = [
+      [4.1, 0.42], [8.3, -0.34], [13.6, 0.29], [20.5, -0.23], [29.4, 0.18],
+      [41.0, -0.13], [56.0, 0.09], [74.0, -0.06],
+    ];
+  } else if (type === "mall") {
+    // Long glassy concourse: repeating reflections from shopfronts.
+    EARLY = [
+      [6.0, 0.34], [14.2, -0.29], [24.5, 0.25], [38.0, -0.21], [57.0, 0.17],
+      [83.0, -0.13], [116.0, 0.1], [158.0, -0.07],
+    ];
+  } else if (type === "clothing") {
+    // Fabric-heavy shop: fewer, softer returns; rails soak up the top end.
+    EARLY = [
+      [3.4, 0.26], [6.9, -0.19], [11.6, 0.14], [17.8, -0.1], [26.0, 0.07],
+      [36.0, -0.05],
+    ];
+  } else if (type === "tunnel") {
+    // Tiled underground platform: dense, slappy, long-lived reflections.
+    EARLY = [
+      [2.2, 0.52], [4.6, -0.46], [7.1, 0.4], [10.0, -0.35], [13.6, 0.3],
+      [18.2, -0.26], [24.0, 0.21], [31.5, -0.17], [41.0, 0.13], [53.0, -0.1],
+      [68.0, 0.07], [86.0, -0.05],
+    ];
+  } else if (type === "living") {
+    // Soft-furnished domestic room: sofa, rug and curtains kill the top end,
+    // so only a handful of gentle reflections survive.
+    EARLY = [
+      [3.1, 0.3], [6.4, -0.22], [10.9, 0.16], [17.0, -0.11], [25.2, 0.07],
+      [35.0, -0.05],
     ];
   } else if (type === "earbud") {
     EARLY = [
@@ -1018,9 +1438,34 @@ export class CarAudioEngine {
     // the captured tab/cable audio; this only adds optional shop, crowd or room texture.
     this.storeHP = this._biquad("highpass", 170, 0.55);
     this.storeLP = this._biquad("lowpass", 3000, 0.7);
+    // Relative tremolo stage (gain ~1) so a pulsing bed keeps its level
+    // scaling: the modulation depth is a ratio, not an absolute gain.
+    this.storeTrem = c.createGain();
+    this.storeTrem.gain.value = 1;
     this.storeGain = c.createGain();
     this.storeGain.gain.value = 0;
-    this.noise.connect(this.storeHP).connect(this.storeLP).connect(this.storeGain).connect(this.ambBus);
+    this.noise
+      .connect(this.storeHP)
+      .connect(this.storeLP)
+      .connect(this.storeTrem)
+      .connect(this.storeGain)
+      .connect(this.ambBus);
+
+    // Slow movement for the space bed: band-edge sweep (crowd, traffic, trains)
+    // and a gentle level surge. Both default to silent and are set per profile.
+    this.bedSweepLFO = c.createOscillator();
+    this.bedSweepLFO.type = "sine";
+    this.bedSweepLFO.frequency.value = 0.1;
+    this.bedSweepGain = c.createGain();
+    this.bedSweepGain.gain.value = 0;
+    this.bedSweepLFO.connect(this.bedSweepGain).connect(this.storeLP.frequency);
+
+    this.bedTremLFO = c.createOscillator();
+    this.bedTremLFO.type = "triangle";
+    this.bedTremLFO.frequency.value = 0.2;
+    this.bedTremGain = c.createGain();
+    this.bedTremGain.gain.value = 0;
+    this.bedTremLFO.connect(this.bedTremGain).connect(this.storeTrem.gain);
 
     this.osc1 = c.createOscillator();
     this.osc1.type = "sawtooth";
@@ -1049,6 +1494,8 @@ export class CarAudioEngine {
 
     const t = c.currentTime;
     this.noise.start(t);
+    this.bedSweepLFO.start(t);
+    this.bedTremLFO.start(t);
     this.windLFO.start(t);
     this.osc1.start(t);
     this.osc2.start(t);
@@ -1211,15 +1658,28 @@ export class CarAudioEngine {
 
     // The space bed is only used for room / venue targets. It is kept out of
     // every other preset so a target change cannot leave a residual noise path.
+    // `ambiencePreset` carries the profile the user last set the ambience slider
+    // for, so one shared slider can serve every space without the bed jumping
+    // back to a stale value when you switch between spaces.
     let spaceBedGain = 0;
-    if (ambienceProfile === "retail") {
-      r(this.storeHP.frequency, 170, 0.35);
-      r(this.storeLP.frequency, 3000, 0.35);
-      spaceBedGain = amb * 0.035;
-    } else if (ambienceProfile === "club") {
-      r(this.storeHP.frequency, 78, 0.35);
-      r(this.storeLP.frequency, 1850, 0.35);
-      spaceBedGain = amb * 0.052;
+    let bedFreqs = null;
+    let bedSweep = null;
+    let bedTrem = null;
+    if (ambienceProfile) {
+      const profile = SPACE_BEDS[ambienceProfile] || DEFAULT_SPACE_BED;
+      bedFreqs = [profile.hp, profile.lp];
+      bedSweep = profile.sweep || null;
+      bedTrem = profile.trem || null;
+      const dialled = s.ambiencePreset === ambienceProfile ? amb : profile.level;
+      spaceBedGain = dialled * profile.gain;
+    }
+    if (bedFreqs) {
+      r(this.storeHP.frequency, bedFreqs[0], 0.35);
+      r(this.storeLP.frequency, bedFreqs[1], 0.35);
+      r(this.bedSweepGain.gain, bedSweep ? bedSweep.depth : 0, 0.35);
+      r(this.bedSweepLFO.frequency, bedSweep ? bedSweep.rate : 0.2, 0.35);
+      r(this.bedTremGain.gain, bedTrem ? bedTrem.depth : 0, 0.35);
+      r(this.bedTremLFO.frequency, bedTrem ? bedTrem.rate : 0.3, 0.35);
     }
     r(this.storeGain.gain, spaceBedGain, 0.35);
 
@@ -1255,6 +1715,8 @@ export class CarAudioEngine {
     try {
       if (this._started) {
         this.noise.stop();
+        this.bedSweepLFO.stop();
+        this.bedTremLFO.stop();
         this.windLFO.stop();
         this.osc1.stop();
         this.osc2.stop();
