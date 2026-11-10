@@ -1,4 +1,4 @@
-import { CarAudioEngine, PRESETS, PRESET_IDS, DEFAULT_SETTINGS } from "./car-audio-engine.js";
+import { CarAudioEngine, PRESETS, PRESET_IDS, DEFAULT_SETTINGS, SPACE_BEDS } from "./car-audio-engine.js";
 
 const $ = (id) => document.getElementById(id);
 
@@ -65,7 +65,8 @@ function renderPresetBadge(p) {
 function renderEnvironment(p) {
   const isVehicleTarget = !p.noEngine;
   const hasSpaceAmbience = !!p.ambienceProfile;
-  const spaceTitle = p.ambienceProfile === "club" ? "Club Ambience" : "Shop Ambience";
+  const spaceTitle = p.ambienceTitle
+    || (p.ambienceProfile === "club" ? "Club Ambience" : "Shop Ambience");
 
   $("environmentHeading").textContent = isVehicleTarget
     ? "Driving & Ambience"
@@ -78,6 +79,16 @@ function renderEnvironment(p) {
   $("ambienceLabel").textContent = isVehicleTarget
     ? "Road & engine noise"
     : p.ambienceLabel || "Room ambience";
+  if (hasSpaceAmbience && settings.ambiencePreset !== p.ambienceProfile) {
+    // Nothing dialled for this space yet: show the level the bed will
+    // actually start from, which may be higher than the stored value.
+    const bed = SPACE_BEDS[p.ambienceProfile];
+    const level = settings.ambienceLevels?.[p.ambienceProfile]
+      ?? bed?.level
+      ?? settings.ambience;
+    $("ambience").value = level;
+    $("ambienceVal").textContent = fmt("ambience", level);
+  }
 
   const notice = $("drivingNotice");
   notice.hidden = !p.environmentNotice;
@@ -153,14 +164,21 @@ function buildPresets() {
   filterPresets();
 }
 
+function matchesCategory(p, category) {
+  if (category === "all") return true;
+  // Space filters are grouped: "space:all", "space:venue", "space:room",
+  // "space:public".
+  if (category.startsWith("space:")) {
+    if (p.category !== "space") return false;
+    const group = category.slice("space:".length);
+    return group === "all" || p.segment === group;
+  }
+  return p.category === category || p.brand === category || p.segment === category;
+}
+
 function filterPresets() {
   document.querySelectorAll(".chip").forEach((el) => {
-    const p = PRESETS[el.dataset.preset];
-    const match = currentCategory === "all"
-      || p.category === currentCategory
-      || p.brand === currentCategory
-      || p.segment === currentCategory;
-    el.hidden = !match;
+    el.hidden = !matchesCategory(PRESETS[el.dataset.preset], currentCategory);
   });
 }
 
@@ -169,6 +187,19 @@ function selectPreset(id) {
   const previous = PRESETS[settings.preset] || PRESETS.sedan;
   const patch = { preset: id };
   if (p.mono !== undefined) patch.mono = p.mono;
+  // Each space gets its own starting bed level and remembers the dial
+  // separately, so moving club -> living room does not leave a
+  // nightclub-sized bed running under the telly.
+  const bed = p.ambienceProfile ? SPACE_BEDS[p.ambienceProfile] : null;
+  if (bed) {
+    patch.ambience = settings.ambienceLevels?.[p.ambienceProfile] ?? bed.level;
+    patch.ambiencePreset = p.ambienceProfile;
+  } else if (previous.ambienceProfile) {
+    // Back to a vehicle: hand the ambience dial back at a sane level
+    // rather than whatever a venue bed was dialled to.
+    patch.ambience = DEFAULT_SETTINGS.ambience;
+    patch.ambiencePreset = "";
+  }
   if (p.crossfeed !== undefined) patch.crossfeed = p.crossfeed;
   if (p.seat !== undefined) patch.seat = p.seat;
 
@@ -303,7 +334,25 @@ async function init() {
   });
 
   for (const id of ["volume", "bass", "treble", "cabin", "speed", "ambience"]) {
-    $(id).addEventListener("input", (e) => change({ [id]: parseFloat(e.target.value) }));
+    $(id).addEventListener("input", (e) => {
+      const value = parseFloat(e.target.value);
+      if (id !== "ambience") {
+        change({ [id]: value });
+        return;
+      }
+      const profile = PRESETS[settings.preset]?.ambienceProfile;
+      if (!profile) {
+        change({ ambience: value });
+        return;
+      }
+      // Remember the dial against this space so switching away and back
+      // restores it instead of resetting to the default bed level.
+      change({
+        ambience: value,
+        ambiencePreset: profile,
+        ambienceLevels: { ...(settings.ambienceLevels || {}), [profile]: value },
+      });
+    });
   }
   for (const id of ["windows", "rattle", "engine"]) {
     $(id).addEventListener("change", (e) => change({ [id]: e.target.checked }));

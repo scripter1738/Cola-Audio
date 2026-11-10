@@ -1,10 +1,15 @@
 {
   "manifest_version": 3,
   "name": "CarAudio – Translation & Space Emulation",
-  "version": "1.4.0",
-  "description": "UK car, BMW, Mercedes-Benz, exotic-car, club, device and space audio translation emulation.",
+  "version": "1.5.0",
+  "description": "UK car, BMW, Mercedes-Benz, exotic-car, concert, mall, room, club, device and space audio translation emulation.",
   "minimum_chrome_version": "116",
-  "permissions": ["tabCapture", "offscreen", "storage", "activeTab"],
+  "permissions": [
+    "tabCapture",
+    "offscreen",
+    "storage",
+    "activeTab"
+  ],
   "background": {
     "service_worker": "background.js"
   },
