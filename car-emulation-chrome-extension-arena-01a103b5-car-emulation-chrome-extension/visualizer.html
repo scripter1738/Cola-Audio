@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#05070c" />
+    <title>CarAudio — Immersive Cabin</title>
+    <link rel="stylesheet" href="visualizer.css" />
+  </head>
+  <body>
+    <main
+      id="immersiveScene"
+      class="immersive-scene"
+      tabindex="0"
+      role="application"
+      aria-label="Immersive car cabin. Use the arrow keys to move between seats and drag to look around."
+    >
+      <div class="grade-overlay" aria-hidden="true"></div>
+      <div class="glass-reflection" aria-hidden="true"></div>
+      <div id="starlight" class="starlight" aria-hidden="true"></div>
+      <div class="vignette" aria-hidden="true"></div>
+
+      <div id="entryHint" class="entry-hint" aria-hidden="true">
+        <span class="hint-key">← ↑ ↓ →</span>
+        <p>Move between seats · drag to look around</p>
+        <small>Click once or press <b>F</b> for full screen</small>
+      </div>
+
+      <div id="seatToast" class="seat-toast" role="status" aria-live="polite">
+        <span class="seat-indicator" aria-hidden="true"><i></i></span>
+        <div>
+          <small id="vehicleLabel">CAR AUDIO IMMERSIVE</small>
+          <strong id="seatTitle">Driver's seat</strong>
+          <span id="seatDescription">Front-right · UK right-hand drive</span>
+        </div>
+      </div>
+
+      <section id="helpOverlay" class="help-overlay" hidden aria-label="Immersive viewer controls">
+        <div class="help-card">
+          <p>IMMERSIVE CABIN</p>
+          <h1 id="helpVehicleName">BMW 3 Series</h1>
+          <dl>
+            <div><dt>← / →</dt><dd>Move left or right between seats</dd></div>
+            <div><dt>↑ / ↓</dt><dd>Move between front and rear rows</dd></div>
+            <div><dt>Drag</dt><dd>Look around the cabin</dd></div>
+            <div><dt>A / D</dt><dd>Turn the viewpoint</dd></div>
+            <div><dt>F</dt><dd>Enter or leave full screen</dd></div>
+            <div><dt>?</dt><dd>Toggle this guide</dd></div>
+          </dl>
+          <span>Press Esc or ? to return to the cabin</span>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="visualizer.js"></script>
+  </body>
+</html>

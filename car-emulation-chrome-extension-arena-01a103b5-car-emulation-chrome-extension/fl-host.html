@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>CarAudio – FL Studio Live Host &amp; Translation Studio</title>
+    <link rel="stylesheet" href="popup.css" />
+    <style>
+      body {
+        width: 380px;
+        margin: 40px auto;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      }
+      .device-box {
+        margin-bottom: 12px;
+      }
+      .device-select {
+        width: 100%;
+        padding: 8px 10px;
+        border-radius: 8px;
+        background: var(--panel-2);
+        color: var(--text);
+        border: 1px solid var(--line);
+        outline: none;
+        font-size: 12px;
+        margin-top: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="top">
+      <div class="brand">
+        <span class="logo">🚗</span>
+        <div>
+          <h1>CarAudio FL Host</h1>
+          <p class="tab">Live Virtual Cable Input</p>
+        </div>
+      </div>
+      <button id="power" class="power" title="Start/Stop Processing" aria-pressed="false">
+        <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+          <path d="M12 3v9" />
+          <path d="M6.3 6.3a8 8 0 1 0 11.4 0" />
+        </svg>
+      </button>
+    </header>
+
+    <div id="status" class="status" hidden></div>
+
+    <section class="card device-box">
+      <h2>Audio Input (Virtual Cable)</h2>
+      <select id="deviceSelect" class="device-select">
+        <option value="">Detecting devices...</option>
+      </select>
+    </section>
+
+    <!-- ACOUSTIC TARGETS & PRESETS -->
+    <section class="card">
+      <div class="card-header">
+        <h2>Acoustic Target &amp; System</h2>
+        <div id="presetTabs" class="category-tabs">
+          <button type="button" class="tab-pill active" data-category="all">All</button>
+          <button type="button" class="tab-pill" data-category="car">🚗 Cars</button>
+          <button type="button" class="tab-pill" data-category="bmw">BMW</button>
+          <button type="button" class="tab-pill" data-category="mercedes">Mercedes</button>
+          <button type="button" class="tab-pill" data-category="exotic">🏁 Exotics</button>
+          <button type="button" class="tab-pill" data-category="studio">🎛️ Studio</button>
+          <button type="button" class="tab-pill" data-category="phone">📱 Phone</button>
+          <button type="button" class="tab-pill" data-category="space">🏬 Spaces</button>
+          <button type="button" class="tab-pill" data-category="smart">🗣️ Smart</button>
+          <button type="button" class="tab-pill" data-category="headphones">🎧 Earbuds</button>
+        </div>
+      </div>
+      <div id="presets" class="presets"></div>
+      <p id="presetDesc" class="desc"></p>
+      <div id="referenceBadge" class="reference-badge" hidden></div>
+      <button id="openVisualizer" class="visualizer-btn" type="button">
+        <span class="visualizer-orb" aria-hidden="true">◌</span>
+        <span class="visualizer-copy">
+          <small>IMMERSIVE CABIN</small>
+          <strong id="visualizerLabel">Open 360° cabin view</strong>
+        </span>
+        <span class="visualizer-arrow" aria-hidden="true">↗</span>
+      </button>
+    </section>
+
+    <!-- HEAD UNIT & MONITOR -->
+    <section class="card">
+      <h2>Playback &amp; Monitor</h2>
+      <label class="slider">
+        <span>Volume knob</span>
+        <input id="volume" type="range" min="0" max="1" step="0.01" />
+        <b id="volumeVal"></b>
+      </label>
+      <label class="slider">
+        <span>Bass</span>
+        <input id="bass" type="range" min="-12" max="12" step="0.5" />
+        <b id="bassVal"></b>
+      </label>
+      <label class="slider">
+        <span>Treble</span>
+        <input id="treble" type="range" min="-12" max="12" step="0.5" />
+        <b id="trebleVal"></b>
+      </label>
+      <label class="slider">
+        <span id="spaceLabel">Room / Cabin IR</span>
+        <input id="cabin" type="range" min="0" max="1" step="0.01" />
+        <b id="cabinVal"></b>
+      </label>
+
+      <!-- QUICK MIX TOOLS -->
+      <div class="mix-tools">
+        <label class="toggle-btn" title="Force mono downmix to test phase cancellation">
+          <input id="mono" type="checkbox" />
+          <span class="btn-label">
+            <span class="icon">📻</span> Mono Sum
+          </span>
+        </label>
+        <label class="toggle-btn" title="60° binaural crossfeed so headphones feel like real studio monitors">
+          <input id="crossfeed" type="checkbox" />
+          <span class="btn-label">
+            <span class="icon">🎧</span> Studio Crossfeed
+          </span>
+        </label>
+      </div>
+    </section>
+
+    <!-- WHERE YOU SIT -->
+    <section class="card" id="seatCard">
+      <div class="seat-heading">
+        <h2 id="seatHeading">Where you sit</h2>
+        <span id="driveSideBadge" class="drive-side">UK · RHD</span>
+      </div>
+      <div class="car-top" id="seatMap">
+        <div class="windshield"></div>
+        <span class="steering-wheel" aria-hidden="true">◌</span>
+        <button class="seat" data-seat="passenger" title="Front passenger (left)">🪑</button>
+        <button class="seat" data-seat="driver" title="Driver — UK right-hand drive">🧑</button>
+        <button class="seat rear" data-seat="rear" title="Back seat">🪑</button>
+        <button class="seat center" data-seat="center" title="Centre (neutral)">◎</button>
+      </div>
+      <p class="desc" id="seatDesc"></p>
+      <p class="card-notice" id="seatNotice" hidden></p>
+    </section>
+
+    <!-- DRIVING & AMBIENCE -->
+    <section class="card" id="drivingCard">
+      <h2 id="environmentHeading">Driving &amp; Ambience</h2>
+      <label class="slider" id="speedRow">
+        <span>Speed</span>
+        <input id="speed" type="range" min="0" max="160" step="1" />
+        <b id="speedVal"></b>
+      </label>
+      <label class="slider" id="ambienceRow">
+        <span id="ambienceLabel">Road &amp; engine noise</span>
+        <input id="ambience" type="range" min="0" max="1" step="0.01" />
+        <b id="ambienceVal"></b>
+      </label>
+      <div class="toggles" id="vehicleToggles">
+        <label class="toggle"><input id="windows" type="checkbox" /><span></span>Windows down</label>
+        <label class="toggle"><input id="rattle" type="checkbox" /><span></span>Panel rattle</label>
+        <label class="toggle"><input id="engine" type="checkbox" /><span></span>Engine hum</label>
+      </div>
+      <p class="card-notice" id="drivingNotice" hidden></p>
+    </section>
+
+    <footer>
+      <button id="reset" class="link">Reset to defaults</button>
+    </footer>
+
+    <script type="module" src="fl-host.js"></script>
+  </body>
+</html>
