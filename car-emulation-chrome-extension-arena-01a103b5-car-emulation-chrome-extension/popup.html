@@ -129,6 +129,32 @@
       <p class="card-notice" id="seatNotice" hidden></p>
     </section>
 
+    <!-- AUTOMATIC SPATIAL MOVEMENT -->
+    <section class="card">
+      <h2>Immersive Sound</h2>
+      <div class="toggles immersive-toggles">
+        <label class="toggle"><input id="immersiveMotion" type="checkbox" /><span></span>Immersive motion</label>
+        <label class="toggle"><input id="advancedReflections" type="checkbox" /><span></span>Advanced reflections</label>
+      </div>
+      <p class="desc">Automatic virtual movement and synthetic binaural reflections. Best with headphones; no head tracking required.</p>
+      <div id="motionControls">
+        <label class="motion-select-label" for="motionMode">Movement</label>
+        <select id="motionMode" class="device-select">
+          <option value="subtle">Slight head movements</option>
+          <option value="look">Looking left and right</option>
+          <option value="turn">Slow 360° turn</option>
+          <option value="concert">Concert head bob</option>
+          <option value="walk">Walking down the street</option>
+          <option value="run">Running</option>
+          <option value="bike">Riding a bike</option>
+          <option value="swing">Playground swing</option>
+        </select>
+        <label class="slider"><span>Motion speed</span><input id="motionSpeed" type="range" min="0.25" max="2" step="0.05" /><b id="motionSpeedVal"></b></label>
+        <label class="slider"><span>Motion strength</span><input id="motionStrength" type="range" min="0" max="1" step="0.01" /><b id="motionStrengthVal"></b></label>
+      </div>
+      <p class="desc">Advanced reflections add directional early echoes and a softer original reverb tail. Room / Cabin controls their level.</p>
+    </section>
+
     <!-- DRIVING & AMBIENCE -->
     <section class="card" id="drivingCard">
       <h2 id="environmentHeading">Driving &amp; Ambience</h2>

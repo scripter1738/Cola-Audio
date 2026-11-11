@@ -36,10 +36,13 @@ function fmt(id, v) {
     case "volume":
     case "cabin":
     case "ambience":
+    case "motionStrength":
       return `${Math.round(v * 100)}%`;
     case "bass":
     case "treble":
       return `${v > 0 ? "+" : ""}${Number(v).toFixed(1)} dB`;
+    case "motionSpeed":
+      return `${Number(v).toFixed(2)}×`;
     case "speed":
       return `${Math.round(v)} km/h`;
     default:
@@ -114,13 +117,18 @@ function render() {
   renderPresetBadge(p);
 
   // Sliders
-  for (const id of ["volume", "bass", "treble", "cabin", "speed", "ambience"]) {
+  for (const id of ["volume", "bass", "treble", "cabin", "speed", "ambience", "motionSpeed", "motionStrength"]) {
     $(id).value = settings[id];
     $(`${id}Val`).textContent = fmt(id, settings[id]);
   }
   for (const id of ["windows", "rattle", "engine"]) {
     $(id).checked = !!settings[id];
   }
+
+  $("immersiveMotion").checked = !!settings.immersiveMotion;
+  $("advancedReflections").checked = !!settings.advancedReflections;
+  $("motionMode").value = settings.motionMode;
+  $("motionControls").hidden = !settings.immersiveMotion;
 
   // Mono & Crossfeed
   $("mono").checked = !!settings.mono;
@@ -381,7 +389,7 @@ async function init() {
     render();
   });
 
-  for (const id of ["volume", "bass", "treble", "cabin", "speed", "ambience"]) {
+  for (const id of ["volume", "bass", "treble", "cabin", "speed", "ambience", "motionSpeed", "motionStrength"]) {
     $(id).addEventListener("input", (e) => {
       const value = parseFloat(e.target.value);
       if (id !== "ambience") {
@@ -405,6 +413,11 @@ async function init() {
   for (const id of ["windows", "rattle", "engine"]) {
     $(id).addEventListener("change", (e) => change({ [id]: e.target.checked }, true));
   }
+
+  for (const id of ["immersiveMotion", "advancedReflections"]) {
+    $(id).addEventListener("change", (e) => change({ [id]: e.target.checked }));
+  }
+  $("motionMode").addEventListener("change", (e) => change({ motionMode: e.target.value }));
 
   $("mono").addEventListener("change", (e) => change({ mono: e.target.checked }, true));
   $("crossfeed").addEventListener("change", (e) => change({ crossfeed: e.target.checked }, true));

@@ -1,3 +1,5 @@
+import { ImmersiveAudio } from "./immersive-audio.js";
+
 /*
  * CarAudio Engine
  * ---------------
@@ -1010,6 +1012,11 @@ export const DEFAULT_SETTINGS = {
   engine: true,
   mono: false,
   crossfeed: false,
+  immersiveMotion: false,
+  motionMode: "subtle",
+  motionSpeed: 1,
+  motionStrength: 0.5,
+  advancedReflections: false,
 };
 
 /* ---------- helpers ---------- */
@@ -1339,6 +1346,8 @@ export class CarAudioEngine {
     this.merger = c.createChannelMerger(2);
     this.rearLP = this._biquad("lowpass", 20000, 0.5);
 
+    this.immersive = new ImmersiveAudio(c);
+
     // Master
     this.limiter = c.createDynamicsCompressor();
     this.limiter.threshold.value = -3;
@@ -1397,9 +1406,11 @@ export class CarAudioEngine {
     this.xfMerger.connect(this.splitter);
     this.splitter.connect(this.delayL, 0).connect(this.gainL).connect(this.merger, 0, 0);
     this.splitter.connect(this.delayR, 1).connect(this.gainR).connect(this.merger, 0, 1);
-    this.merger.connect(this.rearLP).connect(this.limiter).connect(this.master).connect(this.output);
-
-    this.ambBus.connect(this.limiter);
+    this.merger.connect(this.rearLP).connect(this.immersive.input);
+    this.ambBus.connect(this.immersive.input);
+    this.immersive.output.connect(this.limiter).connect(this.master).connect(this.output);
+    this.sat.connect(this.immersive.reflectionInput);
+    this.immersive.reflectionOutput.connect(this.limiter);
   }
 
   start() {
@@ -1598,8 +1609,10 @@ export class CarAudioEngine {
     r(this.dry.gain, 1);
     r(
       this.wet.gain,
-      clamp(s.cabin, 0, 1) * 1.2 * p.irMix * (windows ? 0.55 : 1) * (seatRear ? 1.25 : 1)
+      clamp(s.cabin, 0, 1) * 1.2 * p.irMix * (windows ? 0.55 : 1) * (seatRear ? 1.25 : 1) * (s.advancedReflections ? 0.45 : 1)
     );
+
+    this.immersive.configure(s, p);
 
     // Panel rattle
     const bassPush = clamp(s.bass, -12, 12) / 12;
@@ -1712,6 +1725,7 @@ export class CarAudioEngine {
   }
 
   dispose() {
+    this.immersive.dispose();
     try {
       if (this._started) {
         this.noise.stop();
